@@ -1,0 +1,63 @@
+CC = icpc
+PROG = histogram
+SRCS = fixed.cpp binary.cpp linear.cpp partition.cpp 
+OBJS = $(SRCS:%.cpp=%.o)
+SSE_OBJS = $(SRCS:%.cpp=%.s.o)
+AVX_OBJS = $(SRCS:%.cpp=%.a.o)
+MIC_OBJS = $(SRCS:%.cpp=%.m.o)
+SOBJS = $(SRCS:%.cpp=%.s)
+SSE_SOBJS = $(SRCS:%.cpp=%.s.s)
+AVX_SOBJS = $(SRCS:%.cpp=%.a.s)
+MIC_SOBJS = $(SRCS:%.cpp=%.m.s)
+LDFLAGS = -openmp -ipo -lm 
+CFLAGS = 
+LIBPATH =
+INCLUDE = 
+#GCOPT = -mGLOB_default_function_attrs="use_gather_scatter_hint=on" -mCG_knc_insert_nop_after_gatherhint=FALSE 
+
+#DEBUG = yes
+ifeq (yes, $(DEBUG))
+	CFLAGS += -fast -openmp -DUSE_SAME_TREE -g 
+else
+	CFLAGS += -fast -openmp -DUSE_SAME_TREE # -DALL_THREAD_TIME # -DNO_UPDATE 
+endif
+
+all: $(PROG)   $(PROG)_mic    
+$(PROG): $(OBJS) 
+	$(CC) $(OBJS) -o $(PROG) $(LDFLAGS) $(LIBPATH) 
+
+$(PROG)_sse: $(SSE_OBJS)
+	$(CC) $^ -o $@ $(LDFLAGS) $(LIBPATH) 
+ 
+$(PROG)_avx: $(AVX_OBJS)
+	$(CC) $^ -o $@ $(LDFLAGS) $(LIBPATH) 
+
+$(PROG)_mic: $(MIC_OBJS)
+	$(CC) $^ -mmic -o $@ $(LDFLAGS) $(LIBPATH) 
+	scp $@ mic0:
+
+%.o: %.cpp
+	$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDE)
+%.s: %.cpp
+	$(CC) $(CFLAGS) -fsource-asm -S $< -o $@ $(INCLUDE)
+
+
+%.s.o: %.cpp
+	$(CC) $(CFLAGS) -xSSE -DSIMD -DSSE -c $< -o $@ 
+%.s.s: %.cpp
+	$(CC) $(CFLAGS) -xSSE -DSIMD -DSSE -fsource-asm -S $< -o $@  
+
+
+%.a.o: %.cpp
+	$(CC) $(CFLAGS) -xAVX -DSIMD -DAVX -c $< -o $@ 
+%.a.s: %.cpp
+	$(CC) $(CFLAGS) -xAVX -DSIMD -DAVX -fsource-asm -S $< -o $@  
+
+
+%.m.o: %.cpp
+	$(CC) $(CFLAGS) -mmic -DSIMD -c $< -o $@ 
+%.m.s: %.cpp
+	$(CC) $(CFLAGS) -mmic -DSIMD -fsource-asm -S $< -o $@ 
+
+clean :
+	rm *.o *.s $(PROG) $(PROG)_sse $(PROG)_avx $(PROG)_mic 
