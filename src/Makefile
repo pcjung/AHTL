@@ -6,6 +6,7 @@ SRCS := \
 				binary.cpp\
 				fixed.cpp\
 				linear.cpp\
+				sorting.cpp\
 				partition.cpp\
 				
 				

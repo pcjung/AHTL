@@ -151,6 +151,7 @@ namespace AHTL{
       // Specific histogram functions
       void BuildHistogramLinearSearch();
       void BuildHistogramBinarySearch();
+      void BuildHistogramSortingSearch();
       void BuildHistogramPartitionSearch();
 
       //some functions to access non-public fields
@@ -186,7 +187,25 @@ namespace AHTL{
       char * base_addr_;
 
   };
+  
+
+  // Structure for type checking
+  template <typename T>
+  struct switch_value {};
+
+  template <> struct switch_value<float>
+  {
+    enum { value = 1 };
+  };
+  template <> struct switch_value<int>
+  {
+    enum { value = 2 };
+  };
+
 }
 
 
 #endif
+
+
+

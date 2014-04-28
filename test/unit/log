@@ -1,0 +1,92 @@
+Data & result init : 0.130755 sec
+Instance init : 0.000174999 sec
+Set data : 1.90735e-05 sec
+OpenMP thread30ready
+OpenMP thread16ready
+OpenMP thread0ready
+OpenMP thread10ready
+OpenMP thread3ready
+OpenMP thread1ready
+OpenMP thread2ready
+OpenMP thread11ready
+OpenMP thread15ready
+OpenMP thread13ready
+OpenMP thread7ready
+OpenMP thread9ready
+OpenMP thread5ready
+OpenMP thread29ready
+OpenMP thread19ready
+OpenMP thread31ready
+OpenMP thread6ready
+OpenMP thread18ready
+OpenMP thread4ready
+OpenMP thread28ready
+OpenMP thread12ready
+OpenMP thread8ready
+OpenMP thread20ready
+OpenMP thread23ready
+OpenMP thread21ready
+OpenMP thread22ready
+OpenMP thread14ready
+OpenMP thread24ready
+OpenMP thread27ready
+OpenMP thread25ready
+OpenMP thread17ready
+OpenMP thread26ready
+OpenMP initialization : 0.0104601 sec
+------ MULTI THREAD EXECUTION ------
+--- PRIVATE HISTOGRAM ---
+Histogram : 0.00117087 sec
+Export result : 5.4121e-05 sec
+--correct
+Comparison and clean : 1.38283e-05 sec
+--- SHARED HISTOGRAM ---
+Histogram : 0.0603452 sec
+Export Result : 3.09944e-05 sec
+--correct
+Comparison : 1.19209e-05 sec
+--- LINEAR HISTOGRAM ---
+Histogram : 0.264702 sec
+Export Result : 4.1008e-05 sec
+--correct
+Comparison and clean : 1.38283e-05 sec
+--- BINARY HISTOGRAM ---
+Histogram : 0.00328708 sec
+Export Result : 3.91006e-05 sec
+--correct
+Comparison and clean : 1.38283e-05 sec
+--- SORTING HISTOGRAM ---
+Histogram : 0.152222 sec
+Export Result : 4.88758e-05 sec
+--incorrect
+different at 4095 :401 2347
+Comparison and clean : 2.40803e-05 sec
+------ SINGLE THREAD EXECUTION ------
+--- PRIVATE HISTOGRAM ---
+Histogram : 0.0235488 sec
+Export result : 4.81606e-05 sec
+--correct
+Comparison and clean : 1.28746e-05 sec
+--- SHARED HISTOGRAM ---
+Histogram : 0.084275 sec
+Export Result : 4.81606e-05 sec
+--correct
+Comparison : 1.28746e-05 sec
+--- LINEAR HISTOGRAM ---
+Histogram : 4.0916 sec
+Export Result : 4.88758e-05 sec
+--correct
+Comparison and clean : 1.09673e-05 sec
+--- BINARY HISTOGRAM ---
+Histogram : 0.0688281 sec
+Export Result : 4.69685e-05 sec
+--correct
+Comparison and clean : 1.00136e-05 sec
+--- SORTING HISTOGRAM ---
+Histogram : 0.195149 sec
+Export Result : 6.50883e-05 sec
+--incorrect
+different at 126 :2474 2457
+different at 127 :2482 2499
+different at 4095 :8 2347
+Comparison and clean : 4.29153e-05 sec

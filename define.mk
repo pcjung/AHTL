@@ -25,6 +25,7 @@ endif
 
 ISA = avx
 
+
 ifeq ($(ISA),sse)
 CFLAGS += -DSIMD -DSSE
 endif
@@ -32,7 +33,8 @@ ifeq ($(ISA),avx)
 CFLAGS += -DSIMD -DAVX
 endif
 ifeq ($(ISA),mic)
-CFLAGS += -DSIMD -DMIC
+CFLAGS += -DSIMD -mmic
+LDFLAGS += -mmic
 endif
 
 SRC_DIR = src

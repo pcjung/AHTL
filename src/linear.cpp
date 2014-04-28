@@ -48,39 +48,39 @@
 #ifdef __MIC__
 #define UPDATE(bin , v, buf) \
 			_mm512_store_epi32(buf, v);\
-			bin[buf[0]]++;\
-			bin[buf[1]]++;\
-			bin[buf[2]]++;\
-			bin[buf[3]]++;\
-			bin[buf[4]]++;\
-			bin[buf[5]]++;\
-			bin[buf[6]]++;\
-			bin[buf[7]]++;\
-			bin[buf[8]]++;\
-			bin[buf[9]]++;\
-			bin[buf[10]]++;\
-			bin[buf[11]]++;\
-			bin[buf[12]]++;\
-			bin[buf[13]]++;\
-			bin[buf[14]]++;\
-			bin[buf[15]]++;
+			bin[buf[0]- 1]++;\
+			bin[buf[1]- 1]++;\
+			bin[buf[2]- 1]++;\
+			bin[buf[3]- 1]++;\
+			bin[buf[4]- 1]++;\
+			bin[buf[5]- 1]++;\
+			bin[buf[6]- 1]++;\
+			bin[buf[7]- 1]++;\
+			bin[buf[8]- 1]++;\
+			bin[buf[9]- 1]++;\
+			bin[buf[10]- 1]++;\
+			bin[buf[11]- 1]++;\
+			bin[buf[12]- 1]++;\
+			bin[buf[13]- 1]++;\
+			bin[buf[14]- 1]++;\
+			bin[buf[15]- 1]++;
 #elif AVX
 #define UPDATE(bin , c1, c2) \
-		bin[(unsigned)-_mm_extract_epi32(c1, 0)]++;\
-		bin[(unsigned)-_mm_extract_epi32(c1, 1)]++;\
-		bin[(unsigned)-_mm_extract_epi32(c1, 2)]++;\
-		bin[(unsigned)-_mm_extract_epi32(c1, 3)]++;\
-		bin[(unsigned)-_mm_extract_epi32(c2, 0)]++;\
-		bin[(unsigned)-_mm_extract_epi32(c2, 1)]++;\
-		bin[(unsigned)-_mm_extract_epi32(c2, 2)]++;\
-		bin[(unsigned)-_mm_extract_epi32(c2, 3)]++;
+		bin[((unsigned)-_mm_extract_epi32(c1, 0)- 1)]++;\
+		bin[((unsigned)-_mm_extract_epi32(c1, 1)- 1)]++;\
+		bin[((unsigned)-_mm_extract_epi32(c1, 2)- 1)]++;\
+		bin[((unsigned)-_mm_extract_epi32(c1, 3)- 1)]++;\
+		bin[((unsigned)-_mm_extract_epi32(c2, 0)- 1)]++;\
+		bin[((unsigned)-_mm_extract_epi32(c2, 1)- 1)]++;\
+		bin[((unsigned)-_mm_extract_epi32(c2, 2)- 1)]++;\
+		bin[((unsigned)-_mm_extract_epi32(c2, 3)- 1)]++;
 
 #elif SSE
 #define UPDATE(bin , c1) \
-		bin[(unsigned)-_mm_extract_epi32(c1, 0)]++;\
-		bin[(unsigned)-_mm_extract_epi32(c1, 1)]++;\
-		bin[(unsigned)-_mm_extract_epi32(c1, 2)]++;\
-		bin[(unsigned)-_mm_extract_epi32(c1, 3)]++;
+		bin[(unsigned)-_mm_extract_epi32(c1, 0)- 1]++;\
+		bin[(unsigned)-_mm_extract_epi32(c1, 1)- 1]++;\
+		bin[(unsigned)-_mm_extract_epi32(c1, 2)- 1]++;\
+		bin[(unsigned)-_mm_extract_epi32(c1, 3)- 1]++;
 #endif
 #endif
 #ifdef SIMD
@@ -108,7 +108,7 @@ int hist_linear_float_simd
  float * data, //data should be aligned
  float * boundary,
  unsigned int count,
- unsigned int * bin,
+ int * bin,
  unsigned int bin_count
 )
 {
@@ -133,8 +133,8 @@ int hist_linear_float_simd
 #ifdef BIN_SIMD
 		int VLENbin_count;
 		for(VLENbin_count = 0; VLENbin_count < bin_count - 1; VLENbin_count+=VLEN);
-		_VECTOR * v_boundary = _mm_malloc(sizeof(_VECTOR) * VLENbin_count / VLEN , 64);
-		float * tmp_boundary = _mm_malloc(sizeof(float) * VLENbin_count , 64);
+		_VECTOR * v_boundary = (_VECTOR *)_mm_malloc(sizeof(_VECTOR) * VLENbin_count / VLEN , 64);
+		float * tmp_boundary = (float *)_mm_malloc(sizeof(float) * VLENbin_count , 64);
 		for(i = 1; i < bin_count+1; i++)tmp_boundary[i-1]=boundary[i];
 		for( ; i<VLENbin_count + 1 ; i++) tmp_boundary[i-1] = boundary[bin_count];
 		for(i = 0; i < VLENbin_count; i+=VLEN) v_boundary[i/VLEN] = _MM_LOAD((const float *)tmp_boundary + i);
@@ -310,7 +310,7 @@ int hist_linear_float
 		int i, j;
 		for(i = 0; i < count; i++){
 			float d = data[i];
-#pragma unroll(UNROLL_N)
+//#pragma unroll(UNROLL_N)
 			for(j = bin_count-1; d < boundary[j]; j--);
 			bin[j]++;
 		}

@@ -171,7 +171,7 @@ int hist_binary_float_simd
  float * data, //data should be aligned
  float * _boundary,
  unsigned int count,
- unsigned int * bin,
+ int * bin,
  unsigned int _bin_count,
  float * simd_pack
  )
@@ -496,7 +496,7 @@ int hist_binary_float_simd_sg
  float * data, //data should be aligned
  float * boundary,
  unsigned int count,
- unsigned int * bin,
+ int * bin,
  unsigned int bin_count,
  float * tree
  )
@@ -587,7 +587,7 @@ int hist_binary_float
  float * data, //data should be aligned
  float * boundary,
  unsigned int count,
- unsigned int * bin,
+ int * bin,
  unsigned int bin_count,
  float * tree
  )
@@ -766,7 +766,7 @@ int hist_ipp_float
  float * data, //data should be aligned
  float * boundary,
  unsigned int count,
- unsigned int * bin,
+ int * bin,
  unsigned int bin_count 
  )
 {

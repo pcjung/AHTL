@@ -21,7 +21,7 @@ v1 = _mm512_loadunpackhi_ps(v1, mt+VLEN);
 #define DIST 64
 //#define DIST 1024
 
-#define PREPARTITION
+//#define PREPARTITION
 #ifdef PREPARTITION
 #define PFROM 0
 #define PTO 2
@@ -1037,7 +1037,7 @@ int hist_partition_float_simd
  float * data, //data should be aligned
  float * boundary,
  unsigned int count,
- unsigned int * bin,
+ int * bin,
  unsigned int bin_count
  )
 {
@@ -1066,7 +1066,7 @@ int hist_partition_float_simd
 
 		unsigned int n = bin_count;
 
-		_VECTOR * v_boundary = _mm_malloc(sizeof(_VECTOR) * (n + 1),64);
+		_VECTOR * v_boundary = (_VECTOR *)_mm_malloc(sizeof(_VECTOR) * (n + 1),4096);
 		for( i = 0; i < n+1; i++)
 		{
 				v_boundary[i] = _MM_SET1(boundary[i]);
@@ -1116,8 +1116,8 @@ int hist_partition_float_simd
 #endif
 		unsigned int x = 0;
 		int iter;
-		float * buf1 = _mm_malloc(sizeof(float) * (BLOCK_SIZE + VLEN), 64);
-		float * buf2 = _mm_malloc(sizeof(float) * (BLOCK_SIZE + VLEN), 64);
+		float * buf1 = (float *)_mm_malloc(sizeof(float) * (BLOCK_SIZE + VLEN), 4096);
+		float * buf2 = (float *)_mm_malloc(sizeof(float) * (BLOCK_SIZE + VLEN), 4096);
 		//float * buf1 = _mm_malloc(sizeof(float) * (count - start), 64);
 		//memcpy(buf1, data, sizeof(float) * (count - start));
 		//float buf1[BLOCK_SIZE];
@@ -1137,7 +1137,7 @@ int hist_partition_float_simd
 		buffers[4] = _buf;
 #endif
 #ifdef SINGLESTEP_TEST
-		float * bf = _mm_malloc(sizeof(float) * count, 64);
+		float * bf = _mm_malloc(sizeof(float) * count, 4096);
 		float * bufs[2];
 		bufs[0] = data + start;
 		bufs[1] = bf;
@@ -1208,6 +1208,7 @@ int hist_partition_float_simd
 		unsigned int remain = count - iter;
 		memcpy(buf1, data + iter, sizeof(float) * remain);
 		partition(buf1, buf2, v_boundary, boundary, bin, 0, remain, 0, bin_count); 
+    //printf("remaining?\n");
 		//printf("%d remain\n", remain);
 		/*
 		   if(remain > 256)
@@ -1334,7 +1335,7 @@ int hist_partition_float
 #if 0
 			partition_scalar(data, data, boundary, bin, 0, count, 0, bin_count);
 #else
-			float * buf1 = (float *)_mm_malloc(sizeof(float) * (BLOCK_SIZE), 64);
+			float * buf1 = (float *)_mm_malloc(sizeof(float) * (BLOCK_SIZE), 4096);
 			for(i = 0; i+BLOCK_SIZE-1 < count; i+=BLOCK_SIZE){
 					memcpy(buf1, data, BLOCK_SIZE*sizeof(float));
 					partition_scalar(buf1, buf1, boundary,bin,  0, BLOCK_SIZE, 0, bin_count);
